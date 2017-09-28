@@ -1,0 +1,71 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:AppUwp.Ressources"
+    xmlns:model="using:AppUwp.ViewModels"
+    xmlns:rs="using:Windows.System.RemoteSystems"
+    x:Class="AppUwp.Ressources.DataTemplates">
+
+    <DataTemplate x:DataType="model:UserViewModel"  x:Key="UserViewModelTemplate" >
+        <Grid Margin="0,0,0,0" Background="White" HorizontalAlignment="Stretch" Height="60">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Border BorderBrush="#C6C6C6C6" Grid.ColumnSpan="4" BorderThickness="1" />
+
+            <Grid Grid.Column="0">
+                <Image Name="WaitingImage" Margin="5"  Source="/Assets/UnknownPerson.jpg"
+                                       Width="50" Height="50" 
+                                       ToolTipService.ToolTip="{x:Bind Name}"
+                                       x:Phase="1"
+                                       Stretch="UniformToFill" />
+                <Image Name="AttendeeImage" Margin="5"  
+                                       x:Phase="3" 
+                                       ToolTipService.ToolTip="{x:Bind Name}"
+                                       Source="{x:Bind Photo, Mode=OneWay, FallbackValue='/Assets/UnknownPerson.jpg'}"
+                                       Width="50" Height="50" 
+                                       Stretch="UniformToFill" />
+
+            </Grid>
+            <StackPanel Grid.Column="1" Margin="10,0,0,0">
+                <TextBlock Text="{x:Bind Name}" x:Phase="2" FontWeight="Bold" FontSize="16" />
+                <TextBlock Text="{x:Bind JobTitle}" x:Phase="2" FontSize="12" FontStyle="Italic" />
+                <TextBlock Text="{x:Bind Email}" x:Phase="2" FontSize="12" />
+
+            </StackPanel>
+
+        </Grid>
+    </DataTemplate>
+
+
+    <DataTemplate x:DataType="rs:RemoteSystem"  x:Key="RemoteSystemTemplate" >
+        <Grid Margin="0,0,0,0" Background="White" HorizontalAlignment="Stretch" Height="60">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Border BorderBrush="#C6C6C6C6" Grid.ColumnSpan="4" BorderThickness="1" />
+
+            <Grid Grid.Column="0">
+                <Image Name="PCImage" Margin="5"  Source="/Assets/PC.jpg"
+                                       Width="50" Height="50" 
+                                       ToolTipService.ToolTip="{x:Bind DisplayName}"
+                                       x:Phase="1"
+                                       Stretch="UniformToFill" />
+            </Grid>
+            <StackPanel Grid.Column="1" Margin="10,0,0,0">
+                <TextBlock Text="{x:Bind DisplayName}" x:Phase="2" FontWeight="Bold" FontSize="16" />
+                <TextBlock Text="{x:Bind Kind}" x:Phase="2" FontSize="12" FontStyle="Italic" />
+                <TextBlock Text="{x:Bind Status}" x:Phase="2" FontSize="12" />
+
+            </StackPanel>
+
+        </Grid>
+    </DataTemplate>
+
+</ResourceDictionary>
