@@ -186,3 +186,56 @@ using (AppServiceConnection connection = new AppServiceConnection
 
 This time as key type we send "data" to be sure the catch will consider this is a command. The command that is given into the key Command as a string. 
 When received by the RemoteService, we execute the good command by checking the command value.
+
+## Demo 04 Android SDK
+
+As we decide to only enable to go from Mobile to Desktop app, on the Android device we just implement the "send" part.
+
+The main difference between Windows and other plateform apps, is that we are not connected with an MSA on the device.
+So, how to access Remote Devices ? 
+We should as the user to login with an MSA. Microsoft SDK enable us to call `Platform.initialize()` who will check if we have an MSA token and directly connect us with it or otherwise ask to fetch the an authcode :
+
+```
+Platform.initialize(getApplicationContext(), new IAuthCodeProvider() {
+	@Override
+	/**
+	 * ConnectedDevices Platform needs the app to fetch a MSA auth_code using the given oauthUrl.
+	 * When app is fetched the auth_code, it needs to invoke the authCodeHandler onAuthCodeFetched method.
+	 */
+	public void fetchAuthCodeAsync(String oauthUrl, Platform.IAuthCodeHandler handler) {
+		[...]
+	}
+
+	@Override
+	public String getClientId() {
+		return API_ID;
+	}
+},  
+new IPlatformInitializationHandler() {
+	@Override
+	/**
+	 * When Auth is successfully done 
+	 */
+	public void onDone() {
+		[...]
+	}
+
+	@Override
+	/**
+	 * When Auth is generating an error
+	 */
+	public void onError(PlatformInitializationStatus status) {
+		[...]
+	}
+});
+```
+
+In case of we didn't have an MSA register in the app, we have an authUrl to navigate that enable to get the MSA token.
+
+
+The RemoteDevice API is working closely like on Windows.
+We have a RemoteSystemDiscovery builder that catch events added, removed, updated for devices. We have RemoteSystemDiscoveryTypeFilter and RemoteSystemKindFilter.
+The `RemoteLauncher.LaunchUriAsync` is waiting for completed event.
+And, of course, we also have a communication with the AppService using a ServiceDispatcher acting like on Windows:
+ - Open a connection `new AppServiceConnection("com.deezer.smtccontrollertask", PACKAGE_FAMILY_NAME, new RemoteSystemConnectionRequest(device.getSystem()), serviceConnectionListener, appServiceRequestListener)`
+ - Send message by settings KeyValuePair parameters.
